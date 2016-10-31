@@ -8,28 +8,103 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <time.h>
-/*
-int getFileSize(struct stat buf){ //in bytes
-return (int)buf.st_size;
+
+void getFileSize(struct stat buf){
+  printf("File Size: ");
+  int size = (int)buf.st_size; //in byte
+  if (size > 1000000000){
+    printf("%d GB\n", size/1000000000);
+  }
+  if (size > 1000000){
+    printf("%d MB\n", size/100000);
+  }
+  if (size > 1000){
+    printf("%d KB\n", size/1000);
+  }
+  printf("%d B\n", size);
 }
 
-int getMode(struct stat buf){
-return (int)buf.st_mode;
+void getMode(struct stat buf){
+  printf("Mode: %o\n",(unsigned int)buf.st_mode&(S_IRWXU|S_IRWXG|S_IRWXO));
 }
 
-int getTimeofAccess(struct stat buf){
-return ctime(&buf.st_atime);
+void getTimeofAccess(struct stat buf){
+  printf("Time of Last Access: %s\n",ctime(&buf.st_atime));
 }
 
-int getLLMode(struct stat buf){
+void getLLMode(struct stat buf){
+  printf("(ls -l)Mode: ");
+  int mode = buf.st_mode;
+  int i = 0;
+  if (mode & S_IRUSR){
+    printf("r");
+  }
+  else{
+    printf("-");
+  }
 
+  if (mode & S_IWUSR){
+      printf("w");
+  }
+  else{
+    printf("-");
+  }
+
+  if (mode & S_IXUSR){
+    printf("x");
+  }
+  else{
+    printf("-");
+  }
+  if (mode & S_IRGRP){
+    printf("r");
+  }
+  else{
+    printf("-");
+  }
+
+  if (mode & S_IWGRP){
+    printf("w");
+  }
+  else{
+    printf("-");
+  }
+
+  if (mode & S_IXGRP){
+    printf("x");
+  }
+  else{
+    printf("-");
+  }
+  if (mode & S_IROTH){
+    printf("r");
+  }
+  else{
+    printf("-");
+  }
+
+  if (mode & S_IWOTH){
+    printf("w");
+  }
+  else{
+    printf("-");
+  }
+
+  if (mode & S_IXOTH){
+    printf("x");
+  }
+  else{
+    printf("-");
+  }
+  printf("\n");
 }
-*/
+
 int main(){
   struct stat buf;
-  stat("10_25_16.c",&buf);
-  printf("File Size: %d B\n",(int)buf.st_size);
-  printf("Mode: %o\n",(unsigned int)buf.st_mode);
-  printf("Time of Last Access: %s\n",ctime(&buf.st_atime));
+  stat("README.md",&buf);
+  getFileSize(buf);
+  getMode(buf);
+  getLLMode(buf);
+  getTimeofAccess(buf);
   return 0;
 }
